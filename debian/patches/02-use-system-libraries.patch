@@ -1,0 +1,121 @@
+Description: Changes the dependency management to use the system jars when building
+Author: Emmanuel Bourg <ebourg@apache.org>
+Forwarded: not-needed
+--- a/build.gradle
++++ b/build.gradle
+@@ -998,12 +998,8 @@
+     // closed gradle file instead.
+     if (!BUILD_CLOSED) {
+         repositories {
+-            mavenCentral()
+-            ivy {
+-                url "http://download.eclipse.org/eclipse/updates/3.7/R-3.7.2-201202080800/plugins/"
+-                layout "pattern", {
+-                    artifact "[artifact].[ext]"
+-                }
++            maven {
++                url "file:/usr/share/maven-repo"
+             }
+         }
+     }
+@@ -1011,7 +1007,7 @@
+     // By default all of our projects require junit for testing so we can just
+     // setup this dependency here.
+     dependencies {
+-        testCompile group: "junit", name: "junit", version: "4.8.2"
++        testCompile group: "junit", name: "junit", version: "4.x"
+         if (BUILD_CLOSED && DO_JCOV)  {
+             testCompile name: "jcov"
+         }
+@@ -1124,12 +1120,12 @@
+ 
+     dependencies {
+         compile project(":base"), BUILD_SRC
+-        compile name: SWT_FILE_NAME
+-        stubCompile group: "junit", name: "junit", version: "4.8.2",
++        compile files("/usr/share/java/swt-gtk-3.8.jar")
++        stubCompile group: "junit", name: "junit", version: "4.x",
+         project(":base").sourceSets.test.output, sourceSets.main.output
+-        antlr3 group: "org.antlr", name: "antlr", version: "3.1.3"
+-        antlr3 group: "org.antlr", name: "antlr-runtime",  version: "3.1.3"
+-        antlr3 group: "org.antlr", name: "stringtemplate", version: "3.2"
++        antlr3 group: "org.antlr", name: "antlr", version: "3.x"
++        antlr3 group: "org.antlr", name: "antlr-runtime",  version: "3.x"
++        antlr3 group: "org.antlr", name: "stringtemplate", version: "3.x"
+     }
+ 
+     // Create a single "native" task which will depend on all the individual native tasks for graphics
+@@ -1400,9 +1396,9 @@
+             copy {
+                 into libsDir
+                 from f.getParentFile()
+-                include "**/antlr-3.1.3.jar"
+-                include "**/stringtemplate-3.2.jar"
+-                include "**/antlr-runtime-3.1.3.jar"
++                include "**/antlr-3.x.jar"
++                include "**/stringtemplate-3.x.jar"
++                include "**/antlr-runtime-3.x.jar"
+                 includeEmptyDirs = false
+             }
+             // Have to rename the swt jar because it is some platform specific name but
+@@ -1481,7 +1477,7 @@
+     }
+     dependencies {
+         compile BUILD_SRC, project(":base"), project(":graphics")
+-        compile name: SWT_FILE_NAME
++        compile files("/usr/share/java/swt-gtk-3.8.jar")
+     }
+ }
+ 
+@@ -1581,7 +1577,7 @@
+     }
+ 
+     dependencies {
+-        compile group: "org.apache.ant", name: "ant", version: "1.8.2"
++        compile group: "org.apache.ant", name: "ant", version: "debian"
+     }
+ 
+     // When producing the jar, we need to relocate a few class files
+@@ -1754,13 +1750,13 @@
+     classes << {
+         // Copy all of the download libraries to libs directory for the sake of the IDEs
+         File libsDir = rootProject.file("build/libs");
+-        File antLib = new File(libsDir, "ant-1.8.2.jar")
++        File antLib = new File(libsDir, "ant-debian.jar")
+         libsDir.mkdirs();
+         for (File f : configurations.compile.files) {
+             copy {
+                 into libsDir
+                 from f.getParentFile()
+-                include "**/ant-1.8.2.jar"
++                include "**/ant-debian.jar"
+                 includeEmptyDirs = false
+             }
+         }
+@@ -2084,10 +2080,12 @@
+     compileTargets { t ->
+         def classifier = (t.name != "linux" && t.name != "win") ? t.name :
+                           IS_64 ? "${t.name}-amd64" : "${t.name}-i586"
++/*
+         dependencies {
+             webkit group: "com.sun.webkit", name: "webview-deps",
+                    version: "1.2", classifier: "$classifier", ext: "zip"
+         }
++*/
+ 
+         def webkitOutputDir = "$buildDir/${t.name}"
+         def webkitConfig = IS_DEBUG_NATIVE ? "Debug" : "Release"
+@@ -2095,11 +2093,13 @@
+         def compileNativeTask = task("compileNative${t.capital}", dependsOn: generateHeaders) << {
+             println "Building Webkit configuration /$webkitConfig/ into $webkitOutputDir"
+             
++/*
+             def dependencyFile = configurations.webkit.filter(
+                     { File f -> f.getName().contains(classifier) }
+                 ).getSingleFile()
+             ant.unzip(src:  dependencyFile,
+                       dest: webkitOutputDir)
++*/
+ 
+             exec {
+                 workingDir("$projectDir/src/main/native")

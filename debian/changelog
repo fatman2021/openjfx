@@ -1,0 +1,5 @@
+openjfx (8u5-b13-1) unstable; urgency=low
+
+  * Initial release (Closes: #748413)
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Wed, 25 Jun 2014 15:05:20 +0200

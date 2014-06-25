@@ -1,0 +1,14 @@
+Description: Skip the verification of Java to build with more recent versions of the JDK
+Author: Emmanuel Bourg <ebourg@apache.org>
+Forwarded: not-needed
+--- a/build.gradle
++++ b/build.gradle
+@@ -904,7 +904,7 @@
+         def buildNum = Integer.parseInt(jdkBuildNumber)
+         def minBuildNum = Integer.parseInt(jfxBuildJdkBuildnumMin)
+         if (buildNum < minBuildNum) {
+-            fail("java build number ($buildNum) < minimum build number ($minBuildNum)")
++            //fail("java build number ($buildNum) < minimum build number ($minBuildNum)")
+         }
+     }
+ }

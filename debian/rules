@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+export JAVA_HOME  = /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
+
+%:
+	dh $@ 
+
+override_dh_auto_build:
+	dh_auto_build
+	cp debian/gradle.properties .
+	gradle --offline --stacktrace
+
+override_dh_install:
+	dh_install -i
+
+	gzip -r -v --best build/linux-sdk/man/
+	dh_install -popenjfx build/linux-sdk/bin/* $(JAVA_HOME)/bin
+	dh_install -popenjfx build/linux-sdk/man   $(JAVA_HOME)
+	dh_link -popenjfx $(JAVA_HOME)/bin/javafxpackager           /usr/bin/javafxpackager
+	dh_link -popenjfx $(JAVA_HOME)/man/man1/javafxpackager.1.gz /usr/share/man/man1/javafxpackager.1.gz
+
+	dh_install -plibopenjfx-java build/linux-sdk/lib                 $(JAVA_HOME)
+	dh_install -plibopenjfx-java build/linux-sdk/rt/lib/*.jar        $(JAVA_HOME)/jre/lib
+	dh_install -plibopenjfx-java build/linux-sdk/rt/lib/*.properties $(JAVA_HOME)/jre/lib
+	dh_install -plibopenjfx-java build/linux-sdk/rt/lib/ext          $(JAVA_HOME)/jre/lib
+
+	dh_install -plibopenjfx-jni build/linux-sdk/rt/lib/$(DEB_HOST_ARCH) $(JAVA_HOME)/jre/lib
+
+	dh_install -popenjfx-source build/javafx-src.zip $(JAVA_HOME)
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f gradle.properties
+	rm -Rf build .gradle buildSrc/.gradle/ buildSrc/build/
+	rm -Rf modules/base/build/
+	rm -Rf modules/graphics/build/
+	rm -Rf modules/controls/build/
+	rm -Rf modules/designTime/build/
+	rm -Rf modules/swing/build/
+	rm -Rf modules/builders/build/
+	rm -Rf modules/extensions/build/
+	rm -Rf modules/fxml/build/
+	rm -Rf modules/fxpackager/build/
+	rm -Rf modules/media/build/
+	rm -Rf modules/swt/build/
+	rm -Rf modules/web/build/
+	rm -Rf modules/jmx/build/
+	rm -Rf tests/system/build/
+	rm -f modules/web/src/main/native/Source/WebCore/inspector/CodeGeneratorInspectorStrings.pyc
+
+get-orig-source:
+	uscan --download-current-version --force-download --rename

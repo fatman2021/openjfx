@@ -1,0 +1,4 @@
+01-skip-verify-java.patch
+02-use-system-libraries.patch
+03-buildflags.patch
+04-libav-compatibility.patch
