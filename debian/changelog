@@ -1,4 +1,4 @@
-openjfx (8u5-b13-1) unstable; urgency=low
+openjfx (8u5-b13-1) experimental; urgency=low
 
   * Initial release (Closes: #748413)
 
