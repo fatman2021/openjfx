@@ -15,7 +15,7 @@ override_dh_auto_build:
 override_dh_install:
 	dh_install -i
 
-	gzip -r -v --best build/sdk/man/
+	gzip -r -v -n --best build/sdk/man/
 	dh_install -popenjfx build/sdk/bin/* $(JAVA_HOME)/bin
 	dh_install -popenjfx build/sdk/man   $(JAVA_HOME)
 	dh_link -popenjfx $(JAVA_HOME)/bin/javafxpackager           /usr/bin/javafxpackager
