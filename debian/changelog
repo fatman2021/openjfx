@@ -1,3 +1,9 @@
+openjfx (8u20-b26-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 14:22:30 +0200
+
 openjfx (8u5-b13-1) experimental; urgency=low
 
   * Initial release (Closes: #748413)
