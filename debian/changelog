@@ -2,6 +2,7 @@ openjfx (8u20-b26-1) UNRELEASED; urgency=medium
 
   * New upstream release
   * Disabled the Gradle version check to build with Gradle 1.5
+  * debian/rules: Updated the path to the SDK generated during the build
   * Standards-Version updated to 3.9.6 (no changes)
 
  -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 14:22:30 +0200
