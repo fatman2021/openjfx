@@ -1,5 +1,6 @@
-openjfx (8u20-b26-1) UNRELEASED; urgency=medium
+openjfx (8u20-b26-1) unstable; urgency=medium
 
+  * Upload to unstable
   * New upstream release
   * Disabled the Gradle version check to build with Gradle 1.5
   * debian/rules: Updated the path to the SDK generated during the build
@@ -9,7 +10,7 @@ openjfx (8u20-b26-1) UNRELEASED; urgency=medium
     - Removed the spaces in the licenses short names
     - Updated the license information for the examples under apps/experiments/
 
- -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 14:22:30 +0200
+ -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 17:05:55 +0200
 
 openjfx (8u5-b13-1) experimental; urgency=low
 
