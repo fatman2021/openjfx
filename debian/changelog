@@ -5,6 +5,9 @@ openjfx (8u20-b26-1) UNRELEASED; urgency=medium
   * debian/rules: Updated the path to the SDK generated during the build
   * Removed the timestamp in the gzipped man pages
   * Standards-Version updated to 3.9.6 (no changes)
+  * debian/copyright:
+    - Removed the spaces in the licenses short names
+    - Updated the license information for the examples under apps/experiments/
 
  -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 14:22:30 +0200
 
