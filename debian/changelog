@@ -1,7 +1,15 @@
+openjfx (8u20-b26-2) unstable; urgency=medium
+
+  * Moved the Gradle user home directory into the local directory to avoid
+    a build failure with buildd.
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Thu, 18 Sep 2014 23:36:10 +0200
+
 openjfx (8u20-b26-1) unstable; urgency=medium
 
   * Upload to unstable
   * New upstream release
+    - Refreshed the patches
   * Disabled the Gradle version check to build with Gradle 1.5
   * debian/rules: Updated the path to the SDK generated during the build
   * Removed the timestamp in the gzipped man pages

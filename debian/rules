@@ -10,7 +10,7 @@ export JAVA_HOME  = /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
 override_dh_auto_build:
 	dh_auto_build
 	cp debian/gradle.properties .
-	gradle --offline --stacktrace
+	gradle --offline --stacktrace --refresh-dependencies --gradle-user-home .gradle
 
 override_dh_install:
 	dh_install -i
