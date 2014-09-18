@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -85,6 +85,10 @@ final class J2DFontFactory implements FontFactory {
         return prismFontFactory.isPlatformFont(name);
     }
 
+    public final boolean hasPermission() {
+        return prismFontFactory.hasPermission();
+    }
+
     /* This is an important but tricky one. We need to copy the
      * stream. I don't want to have to manage the temp file deletion here,
      * so although its non-optimal I will create a temp file, provide
@@ -93,6 +97,10 @@ final class J2DFontFactory implements FontFactory {
      */
     public PGFont loadEmbeddedFont(String name, InputStream fontStream,
                                    float size, boolean register) {
+
+        if (!hasPermission()) {
+            return createFont(DEFAULT_FULLNAME, size);
+        }
 
         PGFont font = prismFontFactory.loadEmbeddedFont(name, fontStream, 
                                                         size, register);
@@ -110,31 +118,33 @@ final class J2DFontFactory implements FontFactory {
      */
     public static void registerFont(final FontResource fr) {
 
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            public Object run() {
-                InputStream stream = null;
-                try {
-                    File file = new File(fr.getFileName());
-                    stream = new FileInputStream(file);
-                    Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
-                    fr.setPeer(font);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (stream != null) {
-                        try {
-                            stream.close();
-                        } catch (Exception e2) {
-                        }
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+            InputStream stream = null;
+            try {
+                File file = new File(fr.getFileName());
+                stream = new FileInputStream(file);
+                Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
+                fr.setPeer(font);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (Exception e2) {
                     }
                 }
-                return null;
             }
+            return null;
         });
     }
 
     public PGFont loadEmbeddedFont(String name, String path, 
                                    float size, boolean register) {
+
+        if (!hasPermission()) {
+            return createFont(DEFAULT_FULLNAME, size);
+        }
 
         PGFont font = prismFontFactory.loadEmbeddedFont(name, path, 
                                                         size, register);
@@ -172,8 +182,7 @@ final class J2DFontFactory implements FontFactory {
         synchronized (J2DFontFactory.class) {
             if (!compositeFontMethodsInitialized) {
                 AccessController.doPrivileged(
-                    new PrivilegedAction<Void>() {
-                        public Void run() {
+                        (PrivilegedAction<Void>) () -> {
                             compositeFontMethodsInitialized = true;
                             Class<?> fontMgrCls;
                             try {
@@ -194,12 +203,12 @@ final class J2DFontFactory implements FontFactory {
                                 getCompositeFontUIResource =
                                     fontMgrCls.getMethod(
                                     "getCompositeFontUIResource",
-                                    java.awt.Font.class);
+                                    Font.class);
                             } catch (NoSuchMethodException nsme) {
                             }
                             return null;
                         }
-                    });
+                );
             }
         }
     
