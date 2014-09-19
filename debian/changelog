@@ -5,6 +5,7 @@ openjfx (8u20-b26-3) UNRELEASED; urgency=medium
   * Disabled the architecture verification in build.gradle to attempt building
     on more archs than i386 and amd64
   * Disabled assembler in WebKit on unsupported architectures
+  * Enable SSE2 on i386 and amd64 only to avoid a build failure on other CPUs
 
  -- Emmanuel Bourg <ebourg@apache.org>  Fri, 19 Sep 2014 13:47:51 +0200
 
