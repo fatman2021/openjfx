@@ -4,3 +4,4 @@
 04-libav-compatibility.patch
 05-set-antlr-timeout.patch
 06-disable-architecture-verification.patch
+07-disable-assembler-on-unsupported-archs.patch
