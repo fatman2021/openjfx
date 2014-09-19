@@ -2,3 +2,4 @@
 02-use-system-libraries.patch
 03-buildflags.patch
 04-libav-compatibility.patch
+05-set-antlr-timeout.patch
