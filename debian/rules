@@ -2,7 +2,8 @@
 
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
-export JAVA_HOME  = /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
+export JAVA_HOME    = /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
+export OPENJFX_HOME = /usr/share/java/openjfx
 
 %:
 	dh $@ 
@@ -21,10 +22,16 @@ override_dh_install:
 	dh_link -popenjfx $(JAVA_HOME)/bin/javafxpackager           /usr/bin/javafxpackager
 	dh_link -popenjfx $(JAVA_HOME)/man/man1/javafxpackager.1.gz /usr/share/man/man1/javafxpackager.1.gz
 
-	dh_install -plibopenjfx-java build/sdk/lib                 $(JAVA_HOME)
-	dh_install -plibopenjfx-java build/sdk/rt/lib/*.jar        $(JAVA_HOME)/jre/lib
-	dh_install -plibopenjfx-java build/sdk/rt/lib/*.properties $(JAVA_HOME)/jre/lib
-	dh_install -plibopenjfx-java build/sdk/rt/lib/ext          $(JAVA_HOME)/jre/lib
+	dh_install -plibopenjfx-java build/sdk/lib                  $(OPENJFX_HOME)
+	dh_install -plibopenjfx-java build/sdk/rt/lib/*.jar         $(OPENJFX_HOME)/jre/lib
+	dh_install -plibopenjfx-java build/sdk/rt/lib/*.properties  $(OPENJFX_HOME)/jre/lib
+	dh_install -plibopenjfx-java build/sdk/rt/lib/ext           $(OPENJFX_HOME)/jre/lib
+
+	dh_link -popenjfx $(OPENJFX_HOME)/jre/lib/jfxswt.jar        $(JAVA_HOME)/jre/lib/jfxswt.jar
+	dh_link -popenjfx $(OPENJFX_HOME)/jre/lib/javafx.properties $(JAVA_HOME)/jre/lib/javafx.properties
+	dh_link -popenjfx $(OPENJFX_HOME)/jre/lib/ext/jfxrt.jar     $(JAVA_HOME)/jre/lib/ext/jfxrt.jar
+	dh_link -popenjfx $(OPENJFX_HOME)/lib/ant-javafx.jar        $(JAVA_HOME)/lib/ant-javafx.jar
+	dh_link -popenjfx $(OPENJFX_HOME)/lib/javafx-mx.jar         $(JAVA_HOME)/lib/javafx-mx.jar
 
 	dh_install -plibopenjfx-jni build/sdk/rt/lib/$(DEB_HOST_ARCH) $(JAVA_HOME)/jre/lib
 

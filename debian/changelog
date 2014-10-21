@@ -1,5 +1,6 @@
 openjfx (8u20-b26-3) UNRELEASED; urgency=medium
 
+  * Install the jar files in an arch independent directory (Closes: #764241)
   * Fixed a build failure on slow machines by increasing the timeout
     for processing the ANTLR grammar.
   * Disabled the architecture verification in build.gradle to attempt building
