@@ -3,7 +3,7 @@ openjfx (8u20-b26-3) UNRELEASED; urgency=medium
   * Fixed a build failure on slow machines by increasing the timeout
     for processing the ANTLR grammar.
   * Disabled the architecture verification in build.gradle to attempt building
-    on more archs than i386 and amd64
+    on more archs than i386 and amd64 (Closes: #765397)
   * Disabled assembler in WebKit on unsupported architectures
   * Enable SSE2 on i386 and amd64 only to avoid a build failure on other CPUs
 
