@@ -38,7 +38,7 @@ Build-Depends: antlr3,
                x11proto-xf86vidmode-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-java/openjfx.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-java/openjfx.git
+Vcs-Browser: http://anonscm.debian.org/cgit/pkg-java/openjfx.git
 Homepage: http://openjdk.java.net/projects/openjfx/
 
 Package: openjfx
