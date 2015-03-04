@@ -1,4 +1,4 @@
-openjfx (8u40-b25-1) UNRELEASED; urgency=medium
+openjfx (8u40-b25-1) unstable; urgency=medium
 
   * New upstream release
     - Refreshed the patches
