@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
  */
 #include "config.h"
 #include "WebPage.h"
@@ -87,19 +87,31 @@
 #include "com_sun_webkit_event_WCKeyEvent.h"
 #include "com_sun_webkit_event_WCMouseEvent.h"
 
+#if ENABLE(NOTIFICATIONS) || ENABLE(LEGACY_NOTIFICATIONS)
+#include "NotificationController.h"
+#include "NotificationClientJava.h"
+#endif
+
 namespace WebCore {
 
 WebPage::WebPage(PassOwnPtr<Page> page)
     : m_page(page)
     , m_suppressNextKeypressEvent(false)
+    , m_isDebugging(false)
 #if USE(ACCELERATED_COMPOSITING)
     , m_syncLayers(false)
 #endif
 {
+#if ENABLE(NOTIFICATIONS) || ENABLE(LEGACY_NOTIFICATIONS)
+    if(!NotificationController::clientFrom(m_page.get())) {
+        provideNotification(m_page.get(), NotificationClientJava::instance());
+    }
+#endif
 }
 
 WebPage::~WebPage()
 {
+    debugEnded();
 }
 
 WebPage* WebPage::webPageFromJObject(const JLObject& oWebPage)
@@ -740,6 +752,39 @@ void WebPage::print(GraphicsContext& gc, int pageIndex, float pageWidth)
     gc.platformContext()->rq().flushBuffer();
 }
 
+int WebPage::globalDebugSessionCounter = 0;
+
+void WebPage::debugStarted() {
+    if (!m_isDebugging) {
+        m_isDebugging = true;
+        globalDebugSessionCounter++;
+
+        disableWatchdog();
+    }
+}
+void WebPage::debugEnded() {
+    if (m_isDebugging) {
+        m_isDebugging = false;
+        globalDebugSessionCounter--;
+
+        enableWatchdog();
+    }
+}
+void WebPage::enableWatchdog() {
+    if (globalDebugSessionCounter == 0) {
+        JSContextGroupRef contextGroup = toRef(mainThreadNormalWorld()->vm());
+        JSContextGroupSetExecutionTimeLimit(contextGroup, 10, 0, 0);
+    }
+}
+
+void WebPage::disableWatchdog() {
+    if (globalDebugSessionCounter > 0) {
+        JSContextGroupRef contextGroup = toRef(mainThreadNormalWorld()->vm());
+	    JSContextGroupClearExecutionTimeLimit(contextGroup);
+	}
+}
+
+
 } // namespace WebCore
 
 using namespace WebCore;
@@ -816,8 +861,7 @@ JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkInit
 
     frame->init();
 
-    JSContextGroupRef contextGroup = toRef(mainThreadNormalWorld()->vm());
-    JSContextGroupSetExecutionTimeLimit(contextGroup, 10, 0, 0);
+    WebPage::webPageFromJLong(pPage)->enableWatchdog();
 }
 
 JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkDestroyPage
@@ -2156,6 +2200,7 @@ JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkConnectInspectorFrontend
             }
         }
     }
+    WebPage::webPageFromJLong(pPage)->debugStarted();
 }
 
 JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkDisconnectInspectorFrontend
@@ -2166,6 +2211,7 @@ JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkDisconnectInspectorFronten
         return;
     }
     page->inspectorController()->disconnectFrontend();
+    WebPage::webPageFromJLong(pPage)->debugEnded();
 }
 
 JNIEXPORT void JNICALL Java_com_sun_webkit_WebPage_twkDispatchInspectorMessageFromFrontend
