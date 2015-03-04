@@ -5,3 +5,4 @@
 06-disable-architecture-verification.patch
 07-disable-assembler-on-unsupported-archs.patch
 08-disable-sse2.patch
+09-fix-conflicting-uchar32-typedef.patch

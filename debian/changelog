@@ -3,6 +3,7 @@ openjfx (8u40-b25-1) UNRELEASED; urgency=medium
   * New upstream release
     - Refreshed the patches
     - Removed the libav compatibility patch (fixed upstream)
+    - Added a patch fixing a type definition conflict for UChar32
 
  -- Emmanuel Bourg <ebourg@apache.org>  Wed, 04 Mar 2015 10:14:28 +0100
 
