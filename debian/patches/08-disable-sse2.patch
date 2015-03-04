@@ -3,7 +3,7 @@ Author: Emmanuel Bourg <ebourg@apache.org>
 Forwarded: no
 --- a/modules/media/src/main/native/gstreamer/projects/linux/avplugin/Makefile
 +++ b/modules/media/src/main/native/gstreamer/projects/linux/avplugin/Makefile
-@@ -14,7 +14,6 @@
+@@ -19,7 +19,6 @@
  
  CFLAGS = -fPIC                   \
           -Werror=implicit-function-declaration \
@@ -11,7 +11,7 @@ Forwarded: no
           -fbuiltin               \
           -DHAVE_STDINT_H         \
           -DLINUX                 \
-@@ -27,6 +26,11 @@
+@@ -32,6 +31,11 @@
      CFLAGS += -g -Wall
  endif
  

@@ -1,3 +1,11 @@
+openjfx (8u40-b25-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Refreshed the patches
+    - Removed the libav compatibility patch (fixed upstream)
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Wed, 04 Mar 2015 10:14:28 +0100
+
 openjfx (8u20-b26-3) unstable; urgency=medium
 
   * Install the jar files in an arch independent directory (Closes: #764241)
